@@ -67,29 +67,22 @@ def main() -> int:
                 size_gb_str = "" if size_gb is None else str(size_gb)
 
                 input_types = v.get("input", [])
-                # if isinstance(input_types, list):
-                #     input_str = ", ".join(input_types)
-                # else:
-                #     input_str = str(input_types)
 
                 tags = set(str(t).lower() for t in v.get("tags", []))
 
                 model_version_full = str(v.get("model_version", "") or "").strip()
                 param_size = str(v.get("param_size", "") or "").strip().lower()
 
-                # CSV: keep only the version tag (the part after ':')
                 if ":" in model_version_full:
                     model_version = model_version_full.split(":", 1)[1].strip()
                 else:
                     model_version = ""
 
-                # Skip the implicit default tag.
                 if model_version.strip().lower() == "latest":
                     continue
 
                 cloud_from_version = "cloud" in model_version.lower()
-
-                select_providers = ["Google", "IBM", "Meta", "Microsoft", "NVIDIA", "OpenAI"]
+                select_providers = ["Google", "IBM", "Meta", "Microsoft", "NVIDIA", "OpenAI", "Mistral", "Moonshot AI"]
 
                 row = {
                     "select": "select" if provider in select_providers else None,
