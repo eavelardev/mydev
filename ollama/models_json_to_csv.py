@@ -28,6 +28,7 @@ def main() -> int:
     tag_columns.extend(sorted(tags_found - set(tag_columns)))
 
     fieldnames = [
+        "idx",
         "select",
         "provider",
         "model_name",
@@ -36,6 +37,7 @@ def main() -> int:
         "size_gb",
         "context",
         *tag_columns,
+        "RAG",
         "link",
         "description",
     ]
@@ -50,6 +52,7 @@ def main() -> int:
     with csv_path.open("w", newline="", encoding="utf-8") as f:
         w = csv.DictWriter(f, fieldnames=fieldnames)
         w.writeheader()
+        model_idx = 1
 
         for m in sorted_models:
             provider = str(m.get("provider", "") or "").strip()
@@ -64,7 +67,7 @@ def main() -> int:
                 sheet_link = f'=HYPERLINK("{url}", "link")' if url else ""
 
                 size_gb = v.get("size_gb", None)
-                size_gb_str = "" if size_gb is None else str(size_gb)
+                size_gb = None if size_gb is None else round(size_gb, 2)
 
                 input_types = v.get("input", [])
 
@@ -85,14 +88,16 @@ def main() -> int:
                 select_providers = ["Google", "IBM", "Meta", "Microsoft", "NVIDIA", "OpenAI", "Mistral", "Moonshot AI"]
 
                 row = {
-                    "select": "select" if provider in select_providers else None,
+                    "idx": model_idx,
+                    "select": "select" if provider in select_providers or model_name.startswith("qwen3") else None,
                     "provider": provider,
                     "model_name": model_name,
                     "model_version": model_version,
                     "param_size": param_size,
-                    "size_gb": size_gb_str,
+                    "size_gb": size_gb,
                     "context": v.get("context_display", ""),
                     "vision": "vision" if "Image" in input_types else None,
+                    "RAG": "RAG" if "RAG" in description else None,
                     "link": sheet_link,
                     "description": description,
                 }
@@ -109,6 +114,7 @@ def main() -> int:
                     row[t] = t if present else None
 
                 w.writerow(row)
+                model_idx += 1
 
     print(f"wrote {csv_path}")
     return 0
