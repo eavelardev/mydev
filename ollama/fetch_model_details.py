@@ -133,7 +133,7 @@ def _strip_html(text: str) -> str:
 
 def _infer_version_tags(
     model_name: str,
-    version_name: str,
+    model_versions: str,
     input_types: list[str],
     page_tags: list[str],
     has_thinking_version: bool,
@@ -141,35 +141,34 @@ def _infer_version_tags(
 ) -> set[str]:
     tags = set(page_tags)
 
-    lower_model = model_name.lower()
-    lower_version = version_name.lower()
-    lower_inputs = [t.lower() for t in input_types]
+    model_name = model_name.lower()
+    inputs = [t.lower() for t in input_types]
 
     if "thinking" in tags:
-        if has_thinking_version and "think" not in lower_version:
+        if has_thinking_version and "think" not in model_versions:
             tags.remove("thinking")
-        elif "instruct" in lower_version:
+        elif "instruct" in model_versions:
             tags.remove("thinking")
 
     if "cloud" in tags:
         if has_no_cloud:
             tags.add("cloud")
-        elif "cloud" not in lower_version:
+        elif "cloud" not in model_versions:
             tags.remove("cloud")
 
-    if "embed" in lower_model or "embedding" in lower_model or "embed" in lower_version:
+    if "embed" in model_name or "embedding" in model_name or "embed" in model_versions:
         tags.add("embedding")
 
-    if "thinking" in lower_model or "thinking" in lower_version:
+    if "thinking" in model_name or "thinking" in model_versions:
         tags.add("thinking")
 
-    if "tool" in lower_model or "tool" in lower_version or any("tool" in t for t in lower_inputs):
+    if "tool" in model_name or "tool" in model_versions or any("tool" in t for t in inputs):
         tags.add("tools")
 
-    if "vision" in lower_model or "vision" in lower_version or any("image" in t or "vision" in t for t in lower_inputs):
+    if "vision" in model_name or "vision" in model_versions or any("image" in t or "vision" in t for t in inputs):
         tags.add("vision")
 
-    if "instruct" in lower_version:
+    if "instruct" in model_versions:
         tags.add("instruct")
 
     return tags
@@ -181,7 +180,6 @@ def extract_versions_from_page(
     model_name: str | None = None,
 ) -> list[dict]:
     versions: list[dict] = []
-    seen: set[str] = set()
     has_thinking_version = False
     has_no_cloud = False
 
@@ -213,6 +211,15 @@ def extract_versions_from_page(
             "cloud" not in name.lower() for name in no_cloud_matches if name
         )
 
+    model_versions = " ".join(_clean_text(m.group("name")) for m in VERSION_ROW_RE.finditer(html))
+
+    grouped: dict[str, list[dict]] = {}
+    for v in versions:
+        model_version_full = str(v.get("model_version", "") or "").strip()
+        hash_value = str(v.get("hash", "") or "").strip()
+        group_key = hash_value or f"nohash:{model_version_full}"
+        grouped.setdefault(group_key, []).append(v)
+
     for m in VERSION_ROW_RE.finditer(html):
         href = m.group("href")
         name = _clean_text(m.group("name"))
@@ -227,14 +234,7 @@ def extract_versions_from_page(
         input_text = _clean_text(_strip_html(m.group("input")))
         hash_text = _clean_text(m.group("hash"))
         updated_text = _clean_text(m.group("updated"))
-
-        if name in seen:
-            continue
-        seen.add(name)
-
         input_types = [p.strip() for p in input_text.split(",") if p.strip()]
-
-        version_tags = _infer_version_tags(model_name or "", name, input_types, page_tags, has_thinking_version, has_no_cloud)
 
         versions.append(
             {
@@ -247,60 +247,33 @@ def extract_versions_from_page(
                 "context_display": context_text,
                 "context_tokens": _parse_context_tokens(context_text),
                 "input": input_types,
-                "tags": sorted(version_tags),
                 "hash": hash_text,
                 "updated": updated_text,
             }
         )
 
-    if versions:
-        return versions
+    grouped: dict[str, list[dict]] = {}
 
-    for m in ANCHOR_RE.finditer(html):
-        href = m.group("href")
-        name = _clean_text(m.group("name"))
+    for v in versions:
+        model_version_full = str(v.get("model_version", "") or "").strip()
+        hash_value = str(v.get("hash", "") or "").strip()
+        group_key = hash_value or f"nohash:{model_version_full}"
+        grouped.setdefault(group_key, []).append(v)
 
-        if model_name:
-            expected_prefix = f"/library/{model_name}"
-            if not href.startswith(expected_prefix):
-                continue
+    for group_versions in grouped.values():
+        names = [str(v.get("model_version", "") or "").strip() for v in group_versions]
+        model_versions = " ".join([a.split(":", 1)[1].strip() if ":" in a else a for a in names])
 
-        window = html[m.start() : m.start() + 1600]
-        text_neutral = TEXT_NEUTRAL_RE.findall(window)
-        size_text = _clean_text(text_neutral[0]) if len(text_neutral) > 0 else ""
-        context_text = _clean_text(text_neutral[1]) if len(text_neutral) > 1 else ""
-        input_text = _clean_text(_strip_html(text_neutral[2])) if len(text_neutral) > 2 else ""
-        hash_text = ""
-        updated_text = ""
-        hash_match = HASH_UPDATED_RE.search(window)
-        if hash_match:
-            hash_text = _clean_text(hash_match.group(1))
-            updated_text = _clean_text(hash_match.group(2))
-
-        if name in seen:
-            continue
-        seen.add(name)
-
-        input_types = [p.strip() for p in input_text.split(",") if p.strip()]
-
-        version_tags = _infer_version_tags(model_name or "", name, input_types, page_tags, has_thinking_version)
-
-        versions.append(
-            {
-                "model_version": name,
-                "param_size": extract_param_size_from_version(name),
-                "version_href": href,
-                "version_link": f"https://ollama.com{href}",
-                "size_display": size_text,
-                "size_gb": _parse_size(size_text),
-                "context_display": context_text,
-                "context_tokens": _parse_context_tokens(context_text),
-                "input": input_types,
-                "tags": sorted(version_tags),
-                "hash": hash_text,
-                "updated": updated_text,
-            }
-        )
+        for v in group_versions:
+            version_tags = _infer_version_tags(
+                model_name or "",
+                model_versions,
+                v.get("input", []),
+                page_tags,
+                has_thinking_version,
+                has_no_cloud,
+            )
+            v["tags"] = sorted(version_tags)
 
     return versions
 

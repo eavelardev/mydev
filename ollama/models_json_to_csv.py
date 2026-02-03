@@ -40,6 +40,7 @@ def main() -> int:
         *tag_columns,
         "RAG",
         "link",
+        "date",
         "description",
     ]
 
@@ -115,6 +116,7 @@ def main() -> int:
                     "vision": "vision" if "Image" in input_types else None,
                     "RAG": "RAG" if "RAG" in description else None,
                     "link": sheet_link,
+                    "date": chosen.get("updated", ""),
                     "description": description,
                 }
 

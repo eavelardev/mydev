@@ -68,7 +68,7 @@ def get_model_urls() -> list[str]:
         page_url = f"{SEARCH_URL}{PAGE_PARAM.format(page)}"
         try:
             html = fetch_html(page_url)
-        except Exception as exc:  # pragma: no cover - runtime error handling
+        except Exception as exc:
             print(f"Error fetching {page_url}: {exc}", file=sys.stderr)
             break
 
