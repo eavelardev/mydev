@@ -1,0 +1,92 @@
+[
+    {
+        "partner" : "Microsoft",
+        "title" : "Microsoft Generative AI Engineering",
+        "level" : "Intermediate",
+        "type" : "Professional Certificate"
+    },
+    {
+        "partner" : "Microsoft",
+        "title" : "Microsoft AI Agents: From Foundations to Applications",
+        "level" : "Intermediate",
+        "type" : "Professional Certificate"
+    },
+    {
+        "partner" : "IBM",
+        "title" : "Building AI Agents and Agentic Workflows",
+        "level" : "Intermediate",
+        "type" : "Specialization"
+    },
+    {
+        "partner" : "IBM",
+        "title" : "RAG for Generative AI Applications",
+        "level" : "Intermediate",
+        "type" : "Specialization"
+    },
+    {
+        "partner" : "Amazon Web Services",
+        "title" : "AWS Generative AI and AI Agents with Amazon Bedrock",
+        "level" : "Intermediate",
+        "type" : "Professional Certificate"
+    },
+    {
+        "partner" : "Amazon Web Services",
+        "title" : "AWS Generative AI Applications",
+        "level" : "Beginner",
+        "type" : "Professional Certificate"
+    },
+    {
+        "partner" : "Google Cloud",
+        "title" : "Generative AI Leader",
+        "level" : "Beginner",
+        "type" : "Professional Certificate"
+    },
+    {
+        "partner" : "IBM",
+        "title" : "IBM RAG and Agentic AI",
+        "level" : "Advanced",
+        "type" : "Professional Certificate"
+    },
+    {
+        "partner" : "Google",
+        "title" : "Google Prompting Essentials",
+        "level" : "Beginner",
+        "type" : "Specialization"
+    },
+    {
+        "partner" : "IBM",
+        "title" : "IBM Deep Learning with PyTorch, Keras and Tensorflow",
+        "level" : "Intermediate",
+        "type" : "Professional Certificate"
+    },
+    {
+        "partner" : "IBM",
+        "title" : "IBM Generative AI Engineering",
+        "level" : "Beginner",
+        "type" : "Professional Certificate"
+    },
+    {
+        "partner" : "IBM",
+        "title" : "Generative AI Engineering with LLMs",
+        "level" : "Intermediate",
+        "type" : "Specialization"
+    },
+    {
+        "partner" : "IBM",
+        "title" : "Vector Database Fundamentals",
+        "level" : "Intermediate",
+        "type" : "Specialization"
+    },
+    {
+        "partner" : "IBM",
+        "title" : "IBM AI Engineering",
+        "level" : "Intermediate",
+        "type" : "Professional Certificate"
+    },
+    {
+        "partner" : "IBM",
+        "title" : "IBM AI Developer",
+        "level" : "Beginner",
+        "type" : "Professional Certificate"
+    }
+]
