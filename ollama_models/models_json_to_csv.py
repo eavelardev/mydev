@@ -64,7 +64,23 @@ def main() -> int:
         "qwen2-math",
         "qwen2.5",
         "qwen2.5-coder",
-        "qwen2.5vl"
+        "qwen2.5vl",
+        "starcoder",
+        "olmo-3",
+        "olmo2",
+        "deepseek-v3",
+        "smollm",
+        "granite3-dense",
+        "llama2",
+        "llama3",
+        "llama3.1",
+        "phi",
+        "phi3",
+        "devstral",
+        "mistral-small",
+        "mistral-small3.1",
+        "wizardlm",
+        "glm4"
     ]
 
     with csv_path.open("w", newline="", encoding="utf-8") as f:
