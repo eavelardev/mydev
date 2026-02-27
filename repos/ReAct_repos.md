@@ -1,4 +1,4 @@
-# Repo remote URLs
+# ReAct repos
 
 * [shangrilar/**ai-agent-from-scratch**](https://github.com/shangrilar/ai-agent-from-scratch)
 * [roberto-inf/**building-llm-applications**](https://github.com/roberto-inf/building-llm-applications)

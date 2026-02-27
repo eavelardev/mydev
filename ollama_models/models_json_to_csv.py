@@ -65,6 +65,10 @@ def main() -> int:
         "qwen2.5",
         "qwen2.5-coder",
         "qwen2.5vl",
+        "qwen3",
+        "qwen3-vl",
+        "qwen3-coder-next",
+        "qwen3-next",
         "starcoder",
         "olmo-3",
         "olmo2",
@@ -138,7 +142,7 @@ def main() -> int:
 
                 param_size = str(chosen.get("param_size", "") or "")
 
-                select_providers = ["Google", "IBM", "Meta", "Microsoft", "NVIDIA", "OpenAI", "Mistral", "Moonshot AI"]
+                select_providers = ["Google", "IBM", "Meta", "Microsoft", "NVIDIA", "OpenAI", "Mistral", "Moonshot AI", "Zhipu AI", "DeepSeek"]
 
                 q4 = "q4" if "q4" in all_versions_str else None
                 q8 = "q8" if "q8" in all_versions_str else None

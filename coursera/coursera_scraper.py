@@ -49,7 +49,26 @@ def extract_course_info(html_content):
     soup = BeautifulSoup(html_content, "html.parser")
 
     courses = []
-    course_cards = soup.select("ul.cds-9.css-5t8l4v.cds-10 li")
+    title_links = soup.select(
+        "div[data-testid='product-card-cds'] a.cds-CommonCard-titleLink"
+    )
+    if not title_links:
+        title_links = soup.select("a.cds-CommonCard-titleLink")
+
+    seen_cards = set()
+    course_cards = []
+    for link in title_links:
+        card = link.find_parent("li") or link.find_parent("div", class_="cds-ProductCard-base")
+        if not card:
+            continue
+
+        card_id = id(card)
+        if card_id in seen_cards:
+            continue
+
+        seen_cards.add(card_id)
+        course_cards.append(card)
+
     print(f"Found {len(course_cards)} course cards")
 
     for card in course_cards:
@@ -188,8 +207,8 @@ def get_html_content(url):
     driver = webdriver.Chrome(options=options)
     driver.get(url)
 
-    WebDriverWait(driver, 10).until(
-        EC.presence_of_all_elements_located((By.CLASS_NAME, "cds-ProductCard-base"))
+    WebDriverWait(driver, 20).until(
+        EC.presence_of_element_located((By.CSS_SELECTOR, "div[data-testid='product-card-cds']"))
     )
 
     last_height = driver.execute_script("return document.body.scrollHeight")
@@ -291,6 +310,7 @@ if __name__ == "__main__":
         url = course["url"]
 
         if any(url.endswith(skip_tag) for skip_tag in skip_lang_tags):
+            print(f"Skipping non-English course: {course['title']} ({url})")
             return False
         return True
 

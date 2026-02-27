@@ -26,3 +26,13 @@ graph TD
   class QUERY blueHighlight;
   class ANSWER blueHighlight;
 ```
+
+```py
+from typing import Annotated
+from typing_extensions import TypedDict
+from langchain_core.messages import AnyMessage
+from langgraph.graph.message import add_messages
+
+class MessagesState(TypedDict):
+    messages: Annotated[list[AnyMessage], add_messages]
+```

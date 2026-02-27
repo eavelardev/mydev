@@ -1,5 +1,17 @@
 [
     {
+        "partner" : "Google Cloud",
+        "title" : "Integrate Generative AI Into Your Data Workflow Specialization",
+        "level" : "Beginner",
+        "type" : "Specialization"
+    },
+    {
+        "partner" : "Google",
+        "title" : "Google AI",
+        "level" : "Beginner",
+        "type" : "Professional Certificate"
+    },
+    {
         "partner" : "Microsoft",
         "title" : "Microsoft Generative AI Engineering",
         "level" : "Intermediate",
@@ -81,6 +93,12 @@
         "partner" : "IBM",
         "title" : "Vector Database Fundamentals",
         "level" : "Intermediate",
+        "type" : "Specialization"
+    },
+    {
+        "partner" : "IBM",
+        "title" : "Generative AI Fundamentals",
+        "level" : "Beginner",
         "type" : "Specialization"
     },
     {
