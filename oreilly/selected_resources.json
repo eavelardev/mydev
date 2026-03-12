@@ -1,0 +1,52 @@
+[
+    {
+        "id": "9780135882634",
+        "publisher": "Pearson",
+        "title": "Modern AI Agents: Building Practical Single- and Multi-Agent Systems with MCP and LLMs, 2nd Edition"
+    },
+    {
+        "id":"9780135489710",
+        "publisher": "Addison-Wesley Professional",
+        "title": "Building Agentic AI: Workflows, Fine-Tuning, Optimization, and Deployment"
+    },
+    {
+        "id": "9798341607972",
+        "publisher": "O'Reilly Media, Inc.",
+        "title": "Hands-On Machine Learning with Scikit-Learn and PyTorch"
+    },
+    {
+        "id": "9780135398586",
+        "publisher": "Addison-Wesley Professional",
+        "title": "Clean Code: A Handbook of Agile Software Craftsmanship, 2nd Edition"
+    },
+    {
+        "id": "9780135477618",
+        "publisher": "Pearson",
+        "title": "Modern Applications of AI (Video Collection)"
+    },
+    {
+        "id": "0642572016094",
+        "publisher": "O'Reilly Media, Inc.",
+        "title": "Software Architecture Fundamentals, Third Edition"
+    },
+    {
+        "id": "10000MNVC202503",
+        "publisher": "Manning Publications",
+        "title": "Master and Build Large Language Models + Exercises"
+    },
+    {
+        "id": "9780135416129",
+        "publisher": "Pearson",
+        "title": "Introduction to Large Language Models (LLMs) and Prompt Engineering"
+    },
+    {
+        "id": "9781098175504",
+        "publisher": "O'Reilly Media, Inc.",
+        "title": "Fundamentals of Software Architecture, 2nd Edition"
+    },
+    {
+        "id": "9781098166298",
+        "publisher": "O'Reilly Media, Inc.",
+        "title": "AI Engineering"
+    }
+]
