@@ -2,12 +2,16 @@ import re
 import csv
 from bs4 import BeautifulSoup
 import json
-from selenium import webdriver
+from selenium.webdriver.chrome.webdriver import WebDriver as ChromeDriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.support import expected_conditions as EC
 import time
+
+
+SKILLS_PREFIX_RE = re.compile(r"^\s*Skills you'll gain\s*:\s*", re.IGNORECASE)
+WHITESPACE_RE = re.compile(r"\s+")
 
 
 def extract_metadata(metadata_text):
@@ -40,9 +44,28 @@ def convert_reviews_to_numeric(reviews_text):
 
 
 def clean_skills(skills_text):
-    if skills_text.startswith("Skills you'll gain:"):
-        return skills_text[len("Skills you'll gain:") :].strip()
-    return skills_text.strip()
+    normalized_text = WHITESPACE_RE.sub(" ", skills_text).strip()
+    normalized_text = SKILLS_PREFIX_RE.sub("", normalized_text)
+    return normalized_text.strip(" ,")
+
+
+def extract_skills(card):
+    body = card.find("div", class_="cds-CommonCard-bodyContent") or card
+    candidates = []
+
+    for elem in body.find_all(["p", "div", "span", "li"]):
+        text = " ".join(elem.stripped_strings)
+        if "Skills you'll gain" not in text:
+            continue
+
+        cleaned_text = clean_skills(text)
+        if cleaned_text:
+            candidates.append(cleaned_text)
+
+    if not candidates:
+        return ""
+
+    return max(candidates, key=len)
 
 
 def extract_course_info(html_content):
@@ -101,19 +124,7 @@ def extract_course_info(html_content):
         course["reviews"] = convert_reviews_to_numeric(course["reviews"])
 
         # Skills
-        skills_div = card.find("div", class_="cds-CommonCard-bodyContent")
-        if skills_div:
-            skills_p = skills_div.find("p", class_="css-vac8rf")
-            if skills_p:
-                course["skills"] = skills_p.get_text(strip=True).replace(
-                    "Skills you'll gain: ", ""
-                )
-            else:
-                course["skills"] = ""
-        else:
-            course["skills"] = ""
-
-        course["skills"] = clean_skills(course["skills"])
+        course["skills"] = extract_skills(card)
 
         # Metadata (level, type, duration)
         metadata_div = card.find("div", class_="cds-CommonCard-metadata")
@@ -196,7 +207,7 @@ def save_to_csv(courses, output_file):
 def get_html_content(url):
     print(url)
 
-    options = webdriver.ChromeOptions()
+    options = Options()
     options.add_argument("--headless=new")
     # options.add_argument("--window-size=1920,1080")
     # options.add_argument("--window-size=1280,720")
@@ -204,7 +215,7 @@ def get_html_content(url):
     options.add_argument("--no-sandbox")
     options.add_argument("--disable-dev-shm-usage")
 
-    driver = webdriver.Chrome(options=options)
+    driver = ChromeDriver(options=options)
     driver.get(url)
 
     WebDriverWait(driver, 20).until(
@@ -215,7 +226,7 @@ def get_html_content(url):
 
     while True:
         driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
-        time.sleep(1)
+        time.sleep(1.5)
         new_height = driver.execute_script("return document.body.scrollHeight")
         if new_height == last_height:
             break

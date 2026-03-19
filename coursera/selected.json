@@ -1,7 +1,13 @@
 [
     {
         "partner" : "Google Cloud",
-        "title" : "Integrate Generative AI Into Your Data Workflow Specialization",
+        "title" : "Build and Modernize Applications With Generative AI",
+        "level" : "Intermediate",
+        "type" : "Specialization"
+    },
+    {
+        "partner" : "Google Cloud",
+        "title" : "Integrate Generative AI Into Your Data Workflow",
         "level" : "Beginner",
         "type" : "Specialization"
     },

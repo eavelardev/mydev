@@ -51,42 +51,6 @@ def main() -> int:
         "description",
     ]
 
-    skip_models = [
-        "deepseek-coder",
-        "deepseek-v2",
-        "deepseek-v2.5",
-        "falcon",
-        "falcon2",
-        "gemma",
-        "gemma2",
-        "qwen",
-        "qwen2",
-        "qwen2-math",
-        "qwen2.5",
-        "qwen2.5-coder",
-        "qwen2.5vl",
-        "qwen3",
-        "qwen3-vl",
-        "qwen3-coder-next",
-        "qwen3-next",
-        "starcoder",
-        "olmo-3",
-        "olmo2",
-        "deepseek-v3",
-        "smollm",
-        "granite3-dense",
-        "llama2",
-        "llama3",
-        "llama3.1",
-        "phi",
-        "phi3",
-        "devstral",
-        "mistral-small",
-        "mistral-small3.1",
-        "wizardlm",
-        "glm4"
-    ]
-
     with csv_path.open("w", newline="", encoding="utf-8") as f:
         w = csv.DictWriter(f, fieldnames=fieldnames)
         w.writeheader()
@@ -94,9 +58,6 @@ def main() -> int:
 
         for m in models:
             model_name = m["model_name"]
-
-            if model_name in skip_models:
-                continue
 
             provider = m["provider"]
             description = m["description"]
@@ -117,6 +78,7 @@ def main() -> int:
             )
 
             grouped: dict[str, list[dict]] = {}
+
             for v in versions:
                 model_version_full = v["model_version"]
                 hash_value = v["hash"]
@@ -131,6 +93,11 @@ def main() -> int:
                 aliases = [n for n in versions_sorted[1:] if n]
 
                 chosen = next((v for v in group_versions if v["model_version"] == version), group_versions[0])
+
+                date = chosen.get("updated", "")
+
+                if "year" in date:
+                    continue
 
                 url = chosen.get("version_link", "")
                 sheet_link = f'=HYPERLINK("{url}", "link")' if url else ""
@@ -168,7 +135,7 @@ def main() -> int:
                     "any": "any" if model_has_think_or_instruct else None,
                     "RAG": "RAG" if "RAG" in description else None,
                     "link": sheet_link,
-                    "date": chosen.get("updated", ""),
+                    "date": date,
                     "description": description,
                 }
 

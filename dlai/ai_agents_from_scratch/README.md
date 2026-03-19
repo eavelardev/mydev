@@ -1,5 +1,9 @@
 ## Notebook Index
 
+```py
+client = OpenAI(base_url="http://localhost:11434/v1")
+```
+
 | Lesson                                    | Notebook                                         | Description                                                                   |
 | ----------------------------------------- | ------------------------------------------------ | ----------------------------------------------------------------------------- |
 | Lesson 1: Simple ReAct Agent from Scratch | [Lesson_1_Student.ipynb](Lesson_1_Student.ipynb) | Build a simple ReAct-style agent loop and tool calls from scratch.            |
