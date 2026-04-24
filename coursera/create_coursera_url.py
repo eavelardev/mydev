@@ -13,8 +13,8 @@ educators = [
     "Alberta Machine Intelligence Institute",
     "Anthropic",
     "NVIDIA",
-    "Whizlabs"
-
+    "Whizlabs",
+    "Vanderbilt University"
 ]
 
 product_type_description = [

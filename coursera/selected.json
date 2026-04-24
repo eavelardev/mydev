@@ -72,6 +72,12 @@
         "type" : "Specialization"
     },
     {
+        "partner" : "Vanderbilt University",
+        "title" : "AI Agent Developer",
+        "level" : "Beginner",
+        "type" : "Specialization"
+    },
+    {
         "partner" : "Whizlabs",
         "title" : "Exam Prep (NCA-GENL): NVIDIA-Certified Generative AI LLMs",
         "level" : "Intermediate",

@@ -260,7 +260,8 @@ if __name__ == "__main__":
         "Alberta Machine Intelligence Institute",
         "Anthropic",
         "NVIDIA",
-        "Whizlabs"
+        "Whizlabs",
+        "Vanderbilt University"
     ]
 
     product_type_description = ["Professional Certificates", "Specializations"]
